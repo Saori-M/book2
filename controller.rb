@@ -1,7 +1,7 @@
 ass BookController < ApplicationController
 
 before_action :book_find, only:[:show, :edit, :update, :destroy]
-before_action :redirect, only:[:create, :update, :destroy]
+after_action :redirect, only:[:create, :update, :destroy]
 
   def index
     @books = Book.all
@@ -15,7 +15,7 @@ before_action :redirect, only:[:create, :update, :destroy]
   end
 
   def create
-    book = Book.new(params[:book].permit(:title, :author))
+    book = Book.new(params)
     book.save
   end
 
@@ -23,7 +23,7 @@ before_action :redirect, only:[:create, :update, :destroy]
   end
 
   def update
-    book.update(params[:book].permit(:title, :author))
+    book.update(params)
   end
 
   def destroy
@@ -39,5 +39,8 @@ before_action :redirect, only:[:create, :update, :destroy]
       redirect_to root_path
     end
 
-end
+    def params
+      params = params[:book].permit(:title, :author)
+    end
 
+end
